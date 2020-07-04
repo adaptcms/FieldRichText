@@ -18,7 +18,6 @@ export default {
     'errors',
     'formMeta',
     'model',
-    'module',
     'action'
   ],
 
@@ -56,7 +55,7 @@ export default {
   },
 
   mounted () {
-    if (!this.selected) {
+    if (this.value) {
       this.selected = this.value
     }
   }
