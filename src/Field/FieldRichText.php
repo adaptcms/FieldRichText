@@ -40,4 +40,20 @@ class FieldRichText extends FieldType
   {
     return '$table->text(":columnName")->nullable();';
   }
+
+  /**
+  * Set Value
+  *
+  * @param mixed $value
+  *
+  * @return void
+  */
+  public function setValue($value)
+  {
+    if ($value === 'null') {
+      $value = null;
+    }
+
+    return $value;
+  }
 }
