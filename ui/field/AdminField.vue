@@ -1,19 +1,23 @@
 <template>
-  <quill-editor
-    :id="`form-${field.column_name}`"
-    class="text-base block mt-1 w-full h-48 mb-12"
-    v-model="selected"
-    :options="editorOptions"
-  />
+  <div class="relative">
+    <quill-editor
+      ref="editor"
+      :id="`form-${field.column_name}`"
+      class="text-base block mt-1 w-full editor-height mb-12"
+      v-model:value="selected"
+      :options="editorOptions"
+      @change="onEditorChange($event)"
+    />
+  </div>
 </template>
 
 <script>
-import 'quill/dist/quill.snow.css'
-import { quillEditor } from 'vue-quill-editor'
+import { reactive } from 'vue'
+import { quillEditor, Quill } from 'vue3-quill'
 
 export default {
   props: [
-    'value',
+    'modelValue',
     'field',
     'errors',
     'formMeta',
@@ -21,20 +25,24 @@ export default {
     'action'
   ],
 
+  emits: [
+    'update:modelValue'
+  ],
+
   components: {
     quillEditor
   },
 
   watch: {
-    value (newVal, oldVal) {
-      if (newVal !== oldVal) {
+    modelValue (newVal, oldVal) {
+      if (newVal && newVal !== oldVal) {
         this.selected = newVal
       }
     },
 
     selected (newVal, oldVal) {
       if (newVal !== oldVal) {
-        this.$emit('input', newVal)
+        this.$emit('update:modelValue', newVal)
       }
     }
   },
@@ -54,10 +62,21 @@ export default {
     }
   },
 
+  methods: {
+    onEditorChange ($event) {
+      this.selected = $event.html
+    }
+  },
+
   mounted () {
-    if (this.value) {
-      this.selected = this.value
+    if (this.modelValue) {
+      this.selected = this.modelValue
     }
   }
 }
 </script>
+
+<style lang="sass" scoped>
+.editor-height
+  height: 12rem!important
+</style>
